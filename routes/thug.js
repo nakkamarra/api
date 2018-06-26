@@ -3,22 +3,38 @@ let router = express.Router();
 let config = require('../config');
 let https = require('https');
 
-/* POST request */
-//TODO :: SWITCH TO POST REQUEST
-router.post('/', function(req, res, next) {
-    //parseRequest();
-    console.log(req.body)
-    //postTextResponse();
-    res.send();
+/* GET request */
+router.get('/', function(req, res, next) {
+    res.status(405);
 });
 
-function parseRequest() {
 
+/* POST request */
+router.post('/', function(req, res, next) {
+    console.log(req.body);
+    let data = JSON.parse(req.body);
+    parseRequest(data, res);
+});
+
+function parseRequest(data) {
+    let senderID = data['sender_id'] || '';
+    let senderName = data['name'] || '';
+    let messageText = data['text'] || '';
+    if (messageText.indexOf('thug') || messageText.indexOf('thugger')) {
+        if (messageText.indexOf('pic') || messageText.indexOf('picture')) {
+            postPictureResponse(senderID, senderName);
+        } else {
+            postTextResponse(senderID, senderName);
+        }
+    }
 }
 
-function postTextResponse(){
+function postTextResponse(id, name){
 
-    let response = JSON.stringify({ bot_id: config.thugbot.bot_id, text: readQuote() });
+    let response = JSON.stringify({
+        bot_id: config.thugbot.bot_id,
+        text: '@' + name + ' ' + readQuote()
+    });
 
     let options = {
         host: config.thugbot.host,
@@ -32,14 +48,12 @@ function postTextResponse(){
     };
 
     let callback = function(res) {
-        let str = '';
-
+        let incoming = '';
         res.on('data', function (chunk) {
-            str += chunk;
+            incoming += chunk;
         });
-
         res.on('end', function () {
-            console.log(str);
+            console.log(incoming);
         });
     };
 
@@ -49,8 +63,18 @@ function postTextResponse(){
 
 }
 
+function postPictureResponse(id, name) {
+
+}
+
+function getPicture() {
+
+}
+
 function readQuote() {
-    let quoteArray = ['Thugga thugga! 😤', 'Babysit your dog all day... Bouta watch you jog all day! 😏', 'YeeHAW!! 🤠'];
+    let quoteArray = ['Thugga thugga! 😤',
+        'Babysit your dog all day... Bouta watch you jog all day! 😏',
+        'YeeHAW!! 🤠'];
     let randomIndex = Math.floor(Math.random() * Math.floor(quoteArray.length));
     return quoteArray[randomIndex];
 }
