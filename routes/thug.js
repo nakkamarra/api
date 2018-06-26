@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
 /* POST request */
 router.post('/', function(req, res, next) {
     console.log(req.body);
-    let data = JSON.parse(req.body);
+    let data = req.body;
     parseRequest(data, res);
 });
 
@@ -20,8 +20,8 @@ function parseRequest(data) {
     let senderID = data['sender_id'] || '';
     let senderName = data['name'] || '';
     let messageText = data['text'] || '';
-    if (messageText.indexOf('thug') || messageText.indexOf('thugger')) {
-        if (messageText.indexOf('pic') || messageText.indexOf('picture')) {
+    if (messageText.indexOf('thug') >= 0 || messageText.indexOf('thugger') >= 0) {
+        if (messageText.indexOf('pic') >= 0 || messageText.indexOf('picture') >= 0) {
             postPictureResponse(senderID, senderName);
         } else {
             postTextResponse(senderID, senderName);
