@@ -33,7 +33,16 @@ function postTextResponse(id, name){
 
     let response = JSON.stringify({
         bot_id: config.thugbot.bot_id,
-        text: '@' + name + ' ' + readQuote()
+        text: '@' + name + ' ' + readQuote(),
+        attachments: [
+            {
+                type: 'mentions',
+                user_ids: [id],
+                loci: [
+                    [0, 1 + name.length]
+                ]
+            }
+        ]
     });
 
     let options = {
