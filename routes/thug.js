@@ -4,13 +4,13 @@ let config = require('../config');
 let https = require('https');
 
 /* GET request */
-router.get('/', function(req, res, next) {
+router.get('/', function (req, res, next) {
     res.status(405);
 });
 
 
 /* POST request */
-router.post('/', function(req, res, next) {
+router.post('/', function (req, res, next) {
     console.log(req.body);
     let data = req.body;
     parseRequest(data, res);
@@ -19,17 +19,37 @@ router.post('/', function(req, res, next) {
 function parseRequest(data, res) {
     let senderID = data['sender_id'] || '';
     let senderName = data['name'] || '';
-    let messageText = data['text'] || '';
-    if (messageText.indexOf('thug') >= 0 || messageText.indexOf('thugger') >= 0) {
-        if (messageText.indexOf('pic') >= 0 || messageText.indexOf('picture') >= 0) {
-            postPictureResponse(senderID, senderName, res);
+    let messageText = data['text'].toLowerCase() || '';
+    if (containsTrigger(messageText)) {
+        if (containsStorageRequest()) {
+            storeInput(messageText);
         } else {
-            postTextResponse(senderID, senderName, res);
+            if (containsPictureRequest(messageText)) {
+                postPictureResponse(senderID, senderName, res);
+            } else {
+                postTextResponse(senderID, senderName, res)
+            }
         }
     }
 }
 
-function postTextResponse(id, name, res){
+function containsTrigger(text) {
+    return text.indexOf(config.thugbot.trigger_words.mention) >= 0;
+}
+
+function containsPictureRequest() {
+    return text.indexOf(config.thugbot.trigger_words.picture) >= 0;
+}
+
+function containsStorageRequest() {
+    return text.indexOf(config.thugbot.trigger_words.storage) >= 0;
+}
+
+function storeInput() {
+
+}
+
+function postTextResponse(id, name, res) {
 
     let response = JSON.stringify({
         bot_id: config.thugbot.bot_id,
@@ -56,7 +76,7 @@ function postTextResponse(id, name, res){
         }
     };
 
-    let callback = function(returning) {
+    let callback = function (returning) {
         let incoming = '';
         returning.on('data', function (chunk) {
             incoming += chunk;
@@ -77,7 +97,7 @@ function postPictureResponse(id, name) {
 
 }
 
-function getPicture() {
+function readImage() {
 
 }
 
@@ -119,7 +139,7 @@ function readQuote() {
         'I don\'t drink water cause I rock it 😊',
         'when u talk better talk in all caps',
         'Ima die from my chains choking me in my sleep...',
-        'We tryin to fuck yo tears'];
+        'We tryin\' to fuck yo tears'];
     let randomIndex = Math.floor(Math.random() * Math.floor(quoteArray.length));
     return quoteArray[randomIndex];
 }
