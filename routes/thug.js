@@ -5,7 +5,7 @@ let https = require('https');
 
 /* GET request */
 router.get('/', function (req, res, next) {
-    res.status(405);
+    res.sendStatus(405);
 });
 
 
@@ -21,7 +21,7 @@ function parseRequest(data, res) {
     let senderName = data['name'] || '';
     let messageText = data['text'].toLowerCase() || '';
     if (containsTrigger(messageText)) {
-        if (containsStorageRequest()) {
+        if (containsStorageRequest(messageText)) {
             storeInput(messageText);
         } else {
             if (containsPictureRequest(messageText)) {
@@ -30,6 +30,9 @@ function parseRequest(data, res) {
                 postTextResponse(senderID, senderName, res)
             }
         }
+    } else {
+        res.sendStatus(200);
+        res.end();
     }
 }
 
@@ -37,11 +40,11 @@ function containsTrigger(text) {
     return text.indexOf(config.thugbot.trigger_words.mention) >= 0;
 }
 
-function containsPictureRequest() {
+function containsPictureRequest(text) {
     return text.indexOf(config.thugbot.trigger_words.picture) >= 0;
 }
 
-function containsStorageRequest() {
+function containsStorageRequest(text) {
     return text.indexOf(config.thugbot.trigger_words.storage) >= 0;
 }
 
@@ -84,7 +87,7 @@ function postTextResponse(id, name, res) {
         returning.on('end', function () {
             console.log(incoming);
         });
-        res.send(201);
+        res.sendStatus(201);
     };
 
     let req = https.request(options, callback);
