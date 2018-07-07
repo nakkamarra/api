@@ -110,13 +110,15 @@ function readQuote() {
     let path = config.database.host + ':' + config.database.port;
     let url = 'mongodb://' + cred + path + '/' + config.database.name;
 
-    mongo.connect(url, function(err, db) {
+    mongo.connect(url, function(err, client) {
+        let db = client.db(config.database.name);
         let collection = db.collection('quotes');
         collection.aggregate({$sample: {size: 1}}).toArray(function(err, doc){
             if (err) {
                 console.log(err);
                 return '';
             }
+            db.close();
             return doc;
         });
     });
