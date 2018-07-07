@@ -112,14 +112,13 @@ async function readQuote() {
 
     try {
         client = await mongo.connect(url);
-        console.log("Connected correctly to server");
-
         const db = client.db(config.database.name);
-
         let collection = db.collection('quotes');
 
         await collection.aggregate({$sample: {size: 1}}).toArray(function(err, docs) {
-            return docs;
+            docs.then( (result) => {
+                return result
+            });
         });
 
     } catch (err) {
