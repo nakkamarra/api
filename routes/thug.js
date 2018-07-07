@@ -1,7 +1,10 @@
-let express = require('express');
-let router = express.Router();
-let config = require('../config');
-let https = require('https');
+import express from 'express';
+const router = express.Router();
+import config from '../config';
+import https from 'https';
+import mongo from 'mongodb';
+let db = mongo.MongoClient();
+
 
 /* GET request */
 router.get('/', function (req, res, next) {

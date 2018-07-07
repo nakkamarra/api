@@ -1,11 +1,11 @@
-let createError = require('http-errors');
-let express = require('express');
-let path = require('path');
-let cookieParser = require('cookie-parser');
-let logger = require('morgan');
+import createError from 'http-errors';
+import express from 'express';
+import path from 'path';
+import cookieParser from 'cookie-parser';
+import logger from 'morgan';
 
-let indexRouter = require('./routes/index');
-let thugRouter = require('./routes/thug');
+import indexRouter from './routes/index';
+import thugRouter from './routes/thug';
 
 let app = express();
 
