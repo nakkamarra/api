@@ -1,8 +1,8 @@
-import express from 'express';
+const express = require('express');
 const router = express.Router();
-import config from '../config';
-import https from 'https';
-import mongo from 'mongodb';
+const config = require('../config');
+const https = require('https');
+const mongo = require('mongodb').MongoClient;
 
 /* GET request */
 router.get('/', function (req, res, next) {
@@ -111,7 +111,7 @@ async function readQuote() {
     let url = 'mongodb://' + cred + path + '/' + config.database.name;
 
     try {
-        client = await mongo.MongoClient.connect(url);
+        client = await mongo.connect(url);
         console.log("Connected correctly to server");
 
         const db = client.db(config.database.name);
