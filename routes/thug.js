@@ -106,7 +106,6 @@ function readImage() {
 }
 
 function readQuote() {
-    let client;
     let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
     let path = config.database.host + ':' + config.database.port;
     let url = 'mongodb://' + cred + path + '/' + config.database.name;
@@ -118,7 +117,6 @@ function readQuote() {
                 console.log(err);
                 return '';
             }
-            db.close();
             return doc;
         });
     });
