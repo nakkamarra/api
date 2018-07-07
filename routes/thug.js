@@ -113,12 +113,15 @@ function readQuote() {
         console.log(url);
         console.log(client);
         let db = client.db(config.database.name);
+        console.log(db);
         let collection = db.collection('quotes');
+        console.log(collection);
         collection.aggregate({$sample: {size: 1}}).toArray(function(err, doc){
             if (err) {
                 console.log(err);
                 return '';
             }
+            client.close();
             return doc;
         });
     });
