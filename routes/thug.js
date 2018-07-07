@@ -119,7 +119,6 @@ function readQuote() {
                 console.log(err);
                 return '';
             }
-            client.close()
             return doc;
         });
     });
