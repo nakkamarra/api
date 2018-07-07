@@ -54,10 +54,9 @@ function storeInput() {
 
 function postTextResponse(id, name, res) {
 
-    let quote = readQuote();
     let response = JSON.stringify({
         bot_id: config.thugbot.bot_id,
-        text: '@' + name + ' ' + quote,
+        text: '@' + name + ' ' + readQuote(),
         attachments: [
             {
                 type: 'mentions',
@@ -108,9 +107,11 @@ function readImage() {
 function readQuote() {
     let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
     let path = config.database.host + ':' + config.database.port;
-    let url = 'mongodb://' + cred + path + '/' + config.database.name;
+    let url = 'mongodb://' + cred + '@' + path + '/?authSource=' + config.database.name;
 
     mongo.connect(url, function(err, client) {
+        console.log(url);
+        console.log(client);
         let db = client.db(config.database.name);
         let collection = db.collection('quotes');
         collection.aggregate({$sample: {size: 1}}).toArray(function(err, doc){
