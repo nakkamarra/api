@@ -116,9 +116,7 @@ async function readQuote() {
         let collection = db.collection('quotes');
 
         await collection.aggregate({$sample: {size: 1}}).toArray(function(err, docs) {
-            docs.then( (result) => {
-                return result
-            });
+            return docs.toString()
         });
 
     } catch (err) {
