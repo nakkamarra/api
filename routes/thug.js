@@ -3,14 +3,11 @@ const router = express.Router();
 import config from '../config';
 import https from 'https';
 import mongo from 'mongodb';
-let db = mongo.MongoClient();
-
 
 /* GET request */
 router.get('/', function (req, res, next) {
     res.sendStatus(405);
 });
-
 
 /* POST request */
 router.post('/', function (req, res, next) {
@@ -107,47 +104,25 @@ function readImage() {
 
 }
 
-function readQuote() {
-    let quoteArray = ['Thugga thugga! 😤',
-        'Roll up that raw all day... Babysit your dog all day... Bouta watch you jog all day!! 😏',
-        'YeeHAW!! 🤠',
-        'I’ve did a lot of shit back in the day 🐍',
-        'DRIP DROP💧 I\'m drippy...',
-        'Bet it all, bet it all... She pult uhp ina benz truck 🚘',
-        'Middle finger stick it up 🖕 if u ain een give a fuck',
-        'Wamp-wamp 😜',
-        'Jeffreeeeey... 🎶 \'long side Wyclef',
-        'My diamonds yellow like a corn 🌽',
-        'And I\'m on a perky pill!!',
-        'Bentley wheelin...',
-        'What it do',
-        'Pour up a four of that Actavis, Lean like my mothafuckin\' granny did',
-        'I\'m fucking this cash 💰 I’m not celibate',
-        'Bump on her bumper like a traffic jam 🚦',
-        'I\'m on the top of the mountain, puffin\' on clouds ☁️ and y\'all still beginnin\'!!',
-        'I ain\'t got AIDS 💉 but I swear to God I would bleed \'til I D.I.E',
-        'I know all my whips are foreign, I know all your bitches borin\' 😒',
-        'I\'m at Rolling Loud, right there, rolling out, smokin\' Baaaackwooooooods ',
-        'FAMILY DON\'T MATTA',
-        'What\'s poppin\'... what\'s the deal?',
-        'The bread ambassador... No nothin\' else matter to him... \n ballin\' 🏀 like Patrick Ewing!!!',
-        'Country Billy made a couple milli\'... tryna park the Rolls Royce inside the Piccadilly',
-        'I ain\'t goin\' out like no idiot, I\'m a OG!!',
-        'Yellow school buses, that\'s a Xanny... causin\' me to sleep 😴 and I ain\'t plan it',
-        'I\'m speedin\' and I got a trunk full of wham',
-        'She wan\' chicken like sesame',
-        'Black diamonds like I\'m Akon kid!!',
-        'Diamonds water like I bought \'em from a squid',
-        'America, I just checked my following list, and —— you mothafuckas owe me!!!',
-        'SEX is the name don’t wear it out... Go to the library and check it out...',
-        'I’m changing my name to SEX.... For now on call me SEX!!!',
-        'YSL want all the smoke... ask the opps... 🐍',
-        'I don\'t drink water cause I rock it 😊',
-        'when u talk better talk in all caps',
-        'Ima die from my chains choking me in my sleep...',
-        'We tryin\' to fuck yo tears'];
-    let randomIndex = Math.floor(Math.random() * Math.floor(quoteArray.length));
-    return quoteArray[randomIndex];
+async function readQuote() {
+    let client;
+    let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
+    let path = config.database.host + ':' + config.database.port;
+    let url = 'mongodb://' + cred + path + '/' + config.database.name;
+
+    try {
+        client = await mongo.MongoClient.connect(url);
+        console.log("Connected correctly to server");
+
+        const db = client.db(config.database.name);
+
+        let quote = await db.collection('quotes').aggregate({$sample: {size: 1}})
+        return quote.text
+    } catch (err) {
+        console.log(err.stack);
+    }
+
+    client.close();
 }
 
 module.exports = router;
