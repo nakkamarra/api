@@ -54,45 +54,47 @@ function storeInput() {
 
 function postTextResponse(id, name, res) {
 
-    let response = JSON.stringify({
-        bot_id: config.thugbot.bot_id,
-        text: '@' + name + ' ' + readQuote(),
-        attachments: [
-            {
-                type: 'mentions',
-                user_ids: [id],
-                loci: [
-                    [0, 1 + name.length]
-                ]
+    readQuote().then(quote => {
+        let response = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + ' ' + quote,
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
+            ]
+        });
+
+        let options = {
+            host: config.thugbot.host,
+            path: config.thugbot.path,
+            port: config.thugbot.port,
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Content-Length': Buffer.byteLength(response)
             }
-        ]
+        };
+
+        let callback = function (returning) {
+            let incoming = '';
+            returning.on('data', function (chunk) {
+                incoming += chunk;
+            });
+            returning.on('end', function () {
+                console.log(incoming);
+            });
+            res.sendStatus(201);
+        };
+
+        let req = https.request(options, callback);
+        req.write(response);
+        req.end();
     });
-
-    let options = {
-        host: config.thugbot.host,
-        path: config.thugbot.path,
-        port: config.thugbot.port,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(response)
-        }
-    };
-
-    let callback = function (returning) {
-        let incoming = '';
-        returning.on('data', function (chunk) {
-            incoming += chunk;
-        });
-        returning.on('end', function () {
-            console.log(incoming);
-        });
-        res.sendStatus(201);
-    };
-
-    let req = https.request(options, callback);
-    req.write(response);
-    req.end();
 
 }
 
@@ -104,27 +106,22 @@ function readImage() {
 
 }
 
-function readQuote() {
+async function readQuote() {
     let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
     let path = config.database.host + ':' + config.database.port;
     let url = 'mongodb://' + cred + '@' + path + '/?authSource=' + config.database.name;
+    let client;
 
-    mongo.connect(url, function(err, client) {
-        console.log(url);
-        console.log(client);
+    try {
+        client = await mongo.connect(url);
         let db = client.db(config.database.name);
-        console.log(db);
         let collection = db.collection('quotes');
-        console.log(collection);
-        collection.aggregate({$sample: {size: 1}}).toArray(function(err, doc){
-            if (err) {
-                console.log(err);
-                return '';
-            }
-            client.close();
-            return doc;
-        });
-    });
+        return await collection.aggregate({$sample: {size: 1}}).toArray();
+    } catch (err) {
+        console.log(err.stack);
+    }
+
+    client.close();
 }
 
 module.exports = router;
