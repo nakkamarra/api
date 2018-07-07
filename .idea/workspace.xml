@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="49f261b6-b267-4ae0-98be-b1b85b32909e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/routes/thug.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/thug.js" afterDir="false" />
-    </list>
+    <list default="true" id="49f261b6-b267-4ae0-98be-b1b85b32909e" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -55,8 +53,8 @@
       <file leaf-file-name="thug.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/thug.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="125" column="4" lean-forward="true" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="19" />
+            <state relative-caret-position="198">
+              <caret line="114" column="51" selection-start-line="114" selection-start-column="51" selection-end-line="114" selection-end-column="51" />
             </state>
           </provider>
         </entry>
@@ -178,12 +176,12 @@
       <workItem from="1530146273997" duration="264000" />
       <workItem from="1530146552500" duration="740000" />
       <workItem from="1530149702922" duration="998000" />
-      <workItem from="1530911736788" duration="5001000" />
+      <workItem from="1530911736788" duration="5275000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="33224000" />
+    <option name="totallyTimeSpent" value="33498000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
@@ -475,8 +473,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/thug.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="125" column="4" lean-forward="true" selection-start-line="125" selection-start-column="4" selection-end-line="125" selection-end-column="19" />
+        <state relative-caret-position="198">
+          <caret line="114" column="51" selection-start-line="114" selection-start-column="51" selection-end-line="114" selection-end-column="51" />
         </state>
       </provider>
     </entry>
