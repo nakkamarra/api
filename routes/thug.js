@@ -55,6 +55,7 @@ function storeInput() {
 function postTextResponse(id, name, res) {
 
     readQuote().then(quote => {
+        console.log(quote.toJSON());
         let response = JSON.stringify({
             bot_id: config.thugbot.bot_id,
             text: '@' + name + ' ' + quote,
