@@ -116,8 +116,12 @@ async function readQuote() {
 
         const db = client.db(config.database.name);
 
-        let quote = await db.collection('quotes').aggregate({$sample: {size: 1}})
-        return quote.text
+        let collection = db.collection('quotes');
+
+        await collection.aggregate({$sample: {size: 1}}).toArray(function(err, docs) {
+            return docs;
+        });
+
     } catch (err) {
         console.log(err.stack);
     }
