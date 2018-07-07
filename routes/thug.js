@@ -58,7 +58,7 @@ function postTextResponse(id, name, res) {
         console.log(JSON.stringify(entry));
         let response = JSON.stringify({
             bot_id: config.thugbot.bot_id,
-            text: '@' + name + ' ' + entry.text,
+            text: '@' + name + ' ' + entry,
             attachments: [
                 {
                     type: 'mentions',
@@ -117,7 +117,7 @@ async function readQuote() {
         client = await mongo.connect(url);
         let db = client.db(config.database.name);
         let collection = db.collection('quotes');
-        return await collection.aggregate({$sample: {size: 1}}).toArray()[0];
+        return await collection.aggregate([{$sample: {size: 1}}]).toArray()[0];
     } catch (err) {
         console.log(err.stack);
     }
