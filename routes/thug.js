@@ -119,7 +119,7 @@ function readQuote() {
                 console.log(err);
                 return '';
             }
-            db.close();
+            client.close()
             return doc;
         });
     });
