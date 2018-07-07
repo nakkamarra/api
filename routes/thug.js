@@ -104,25 +104,27 @@ function readImage() {
 
 }
 
-async function readQuote() {
-    let client;
-    let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
-    let path = config.database.host + ':' + config.database.port;
-    let url = 'mongodb://' + cred + path + '/' + config.database.name;
+function readQuote() {
+    (async function() {
+        let client;
+        let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
+        let path = config.database.host + ':' + config.database.port;
+        let url = 'mongodb://' + cred + path + '/' + config.database.name;
 
-    try {
-        client = await mongo.connect(url);
-        const db = client.db(config.database.name);
-        let collection = db.collection('quotes');
+        try {
+            client = await mongo.connect(url);
+            const db = client.db(config.database.name);
+            let collection = db.collection('quotes');
 
-        let quote = await collection.aggregate({$sample: {size: 1}}).toArray();
-        return quote.text;
+            let quote = await collection.aggregate({$sample: {size: 1}}).toArray();
+            return quote.text;
 
-    } catch (err) {
-        console.log(err.stack);
-    }
+        } catch (err) {
+            console.log(err.stack);
+        }
 
-    client.close();
+        client.close();
+    })();
 }
 
 module.exports = router;
