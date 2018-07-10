@@ -22,7 +22,7 @@ function parseRequest(data, res) {
     let messageText = data['text'].toLowerCase() || '';
     if (containsTrigger(messageText)) {
         if (containsStorageRequest(messageText)) {
-            storeInput(messageText);
+            storeInput(messageText, data, res);
         } else {
             if (containsPictureRequest(messageText)) {
                 postPictureResponse(senderID, senderName, res);
@@ -48,7 +48,61 @@ function containsStorageRequest(text) {
     return text.indexOf(config.thugbot.trigger_words.storage) >= 0;
 }
 
-function storeInput() {
+function storeInput(message, data, res) {
+    let name = data['name'];
+    let id = data['sender_id'];
+    let attachments = data['attachments'];
+    let outgoing;
+    if (attachments.length !== 0) {
+        let url = attachments[0].url;
+        insertImage(url).then(insertCount => {
+            if (insertCount === 1) {
+                outgoing = JSON.stringify({
+                    bot_id: config.thugbot.bot_id,
+                    text: '@' + name + ' ' + 'got it',
+                    attachments: [
+                        {
+                            type: 'mentions',
+                            user_ids: [id],
+                            loci: [
+                                [0, 1 + name.length]
+                            ]
+                        }
+                    ]
+                });
+            } else {
+                outgoing = JSON.stringify({
+                    bot_id: config.thugbot.bot_id,
+                    text: '@' + name + ' ' + 'something went wrong',
+                    attachments: [
+                        {
+                            type: 'mentions',
+                            user_ids: [id],
+                            loci: [
+                                [0, 1 + name.length]
+                            ]
+                        }
+                    ]
+                });
+            }
+            sendResponse(outgoing, res);
+        });
+    } else {
+        outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + ' ' + 'I can only store flicks rn',
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
+            ]
+        });
+        sendResponse(outgoing, res);
+    }
 
 }
 
@@ -130,6 +184,24 @@ async function readQuote() {
         let db = client.db(config.database.name);
         let collection = db.collection('quotes');
         return await collection.aggregate([{ $sample: { size: 1 }}]).toArray();
+    } catch (err) {
+        console.log(err.stack);
+    }
+
+    client.close();
+}
+
+async function insertImage(source) {
+    let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
+    let path = config.database.host + ':' + config.database.port;
+    let url = 'mongodb://' + cred + '@' + path + '/?authSource=' + config.database.name;
+    let client;
+
+    try {
+        client = await mongo.connect(url);
+        let db = client.db(config.database.name);
+        let collection = db.collection('images');
+        return await collection.insertOne({ url: source })
     } catch (err) {
         console.log(err.stack);
     }
