@@ -56,6 +56,7 @@ function storeInput(message, data, res) {
     if (attachments.length !== 0) {
         let url = attachments[0].url;
         insertImage(url).then(insertCount => {
+            console.log(insertCount);
             if (insertCount === 1) {
                 outgoing = JSON.stringify({
                     bot_id: config.thugbot.bot_id,
