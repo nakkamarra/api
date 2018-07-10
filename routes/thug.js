@@ -54,11 +54,11 @@ function storeInput() {
 
 function postTextResponse(id, name, res) {
 
-    readQuote().then(entries => {
-        console.log(JSON.stringify(entries));
-        let response = JSON.stringify({
+    readQuote().then(quotes => {
+
+        let outgoing = JSON.stringify({
             bot_id: config.thugbot.bot_id,
-            text: '@' + name + ' ' + entries[0].text,
+            text: '@' + name + ' ' + quotes[0].text,
             attachments: [
                 {
                     type: 'mentions',
@@ -70,41 +70,53 @@ function postTextResponse(id, name, res) {
             ]
         });
 
-        let options = {
-            host: config.thugbot.host,
-            path: config.thugbot.path,
-            port: config.thugbot.port,
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(response)
-            }
-        };
-
-        let callback = function (returning) {
-            let incoming = '';
-            returning.on('data', function (chunk) {
-                incoming += chunk;
-            });
-            returning.on('end', function () {
-                console.log(incoming);
-            });
-            res.sendStatus(201);
-        };
-
-        let req = https.request(options, callback);
-        req.write(response);
-        req.end();
+        sendResponse(outgoing, res);
     });
 
 }
 
-function postPictureResponse(id, name) {
+function postPictureResponse(id, name, res) {
 
+    readImage().then(images => {
+
+        let outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name,
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                },
+                {
+                    type: 'image',
+                    url: images[0].url
+                }
+            ]
+        });
+
+        sendResponse(outgoing, res);
+    });
 }
 
-function readImage() {
+async function readImage() {
+    let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
+    let path = config.database.host + ':' + config.database.port;
+    let url = 'mongodb://' + cred + '@' + path + '/?authSource=' + config.database.name;
+    let client;
 
+    try {
+        client = await mongo.connect(url);
+        let db = client.db(config.database.name);
+        let collection = db.collection('images');
+        return await collection.aggregate([{ $sample: { size: 1 }}]).toArray();
+    } catch (err) {
+        console.log(err.stack);
+    }
+
+    client.close();
 }
 
 async function readQuote() {
@@ -123,6 +135,35 @@ async function readQuote() {
     }
 
     client.close();
+}
+
+function sendResponse(outgoing, res) {
+
+    let options = {
+        host: config.thugbot.host,
+        path: config.thugbot.path,
+        port: config.thugbot.port,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Content-Length': Buffer.byteLength(outgoing)
+        }
+    };
+
+    let callback = function (returning) {
+        let incoming = '';
+        returning.on('data', function (chunk) {
+            incoming += chunk;
+        });
+        returning.on('end', function () {
+            console.log(incoming);
+        });
+        res.sendStatus(201);
+    };
+
+    let req = https.request(options, callback);
+    req.write(outgoing);
+    req.end();
 }
 
 module.exports = router;
