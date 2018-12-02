@@ -101,7 +101,7 @@ async function getRandomTrackFromAlbum(albumId, accessToken) {
                     resolve(randomTrack['external_urls'])
                 });
             } else {
-                reject('failed to get random album')
+                reject('failed to get random song')
             }
         });
     });
