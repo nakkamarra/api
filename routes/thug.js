@@ -190,7 +190,9 @@ function postSongResponse(id, name, res){
         });
 
         sendResponse(outgoing, res);
-    });
+    }).catch( (rejection) => {
+        console.log(rejection)
+    })
 
 }
 
@@ -253,7 +255,6 @@ async function insertImage(source) {
 
 // Use spotify helper functions to get a random track
 async function getRandomSong() {
-
     try {
         let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
         let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
@@ -261,7 +262,6 @@ async function getRandomSong() {
     }  catch (err) {
         console.log(err.stack);
     }
-
 }
 
 // Post the response with proper format and info
