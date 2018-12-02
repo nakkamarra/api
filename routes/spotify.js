@@ -1,7 +1,7 @@
 const https = require('https');
 
 // Get an API token using the provided ID and Secret
-async function getAccessToken(clientId, clientSecret) {
+function getAccessToken(clientId, clientSecret) {
     let payload = Buffer(clientId + ':' + clientSecret).toString('base64');
     let auth = 'Basic ' + payload;
 
@@ -37,7 +37,7 @@ async function getAccessToken(clientId, clientSecret) {
     });
 }
 // Get all albums from the Artist passed and randomly select one and return it
-async function getRandomAlbum(artistId, accessToken) {
+function getRandomAlbum(artistId, accessToken) {
 
     let data = {
         host: 'api.spotify.com',
@@ -73,7 +73,7 @@ async function getRandomAlbum(artistId, accessToken) {
 }
 
 // Get all tracks from the Album passed and randomly select one and return it
-async function getRandomTrackFromAlbum(albumId, accessToken) {
+function getRandomTrackFromAlbum(albumId, accessToken) {
     let data = {
         host: 'api.spotify.com',
         port: 443,
