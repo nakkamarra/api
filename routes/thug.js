@@ -174,43 +174,23 @@ function postPictureResponse(id, name, res) {
 // Send a spotify link as a message
 function postSongResponse(id, name, res){
 
-    getRandomSong().then(track => {
+    let track = getRandomSong();
 
-        let outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
-            text: '@' + name + "bump it luv" + track['spotify'],
-            attachments: [
-                {
-                    type: 'mentions',
-                    user_ids: [id],
-                    loci: [
-                        [0, 1 + name.length]
-                    ]
-                }
+    let outgoing = JSON.stringify({
+        bot_id: config.thugbot.bot_id,
+        text: '@' + name + "bump it luv" + track['spotify'],
+        attachments: [
+            {
+                type: 'mentions',
+                user_ids: [id],
+                loci: [
+                    [0, 1 + name.length]
+                ]
+            }
             ]
         });
 
-        sendResponse(outgoing, res);
-
-    }).catch(error => {
-
-        let outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
-            text: '@' + name + error,
-            attachments: [
-                {
-                    type: 'mentions',
-                    user_ids: [id],
-                    loci: [
-                        [0, 1 + name.length]
-                    ]
-                }
-            ]
-        });
-
-        sendResponse(outgoing, res)
-
-    })
+    sendResponse(outgoing, res);
 }
 
 // Fetch a photo from the DB
