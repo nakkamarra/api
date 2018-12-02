@@ -172,7 +172,7 @@ function postPictureResponse(id, name, res) {
 }
 
 // Send a spotify link as a message
-function postSongResponse(){
+function postSongResponse(id, name, res){
 
     getRandomSong().then(track => {
 
@@ -193,6 +193,23 @@ function postSongResponse(){
         sendResponse(outgoing, res);
 
 
+    }).catch( function (onRejected) {
+
+        let outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + onRejected,
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
+            ]
+        });
+
+        sendResponse(outgoing, res);
     })
 }
 
