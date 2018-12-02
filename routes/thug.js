@@ -3,14 +3,15 @@ const router = express.Router();
 const config = require('../config');
 const https = require('https');
 const mongo = require('mongodb').MongoClient;
+const spot = require('spotify.js');
 
 /* GET request */
-router.get('/', function (req, res, next) {
+router.get('/', function (req, res) {
     res.sendStatus(405);
 });
 
 /* POST request */
-router.post('/', function (req, res, next) {
+router.post('/', function (req, res) {
     console.log(req.body);
     let data = req.body;
     parseRequest(data, res);
@@ -20,22 +21,30 @@ function parseRequest(data, res) {
     let senderID = data['sender_id'] || '';
     let senderName = data['name'] || '';
     let messageText = data['text'].toLowerCase() || '';
+
     if (containsTrigger(messageText)) {
+
         if (containsStorageRequest(messageText)) {
             storeInput(messageText, data, res);
         } else {
             if (containsPictureRequest(messageText)) {
                 postPictureResponse(senderID, senderName, res);
-            } else {
-                postTextResponse(senderID, senderName, res)
+            } else if (containsSongRequest(messageText)) {
+                postSongResponse(senderID, senderName, res);
+            }
+            else {
+                postTextResponse(senderID, senderName, res);
             }
         }
+
     } else {
         res.sendStatus(200);
         res.end();
     }
 }
 
+
+// Trigger Word Checkers
 function containsTrigger(text) {
     return text.indexOf(config.thugbot.trigger_words.mention) >= 0;
 }
@@ -48,6 +57,11 @@ function containsStorageRequest(text) {
     return text.indexOf(config.thugbot.trigger_words.storage) >= 0;
 }
 
+function containsSongRequest(text) {
+    return text.indexOf(config.thugbot.trigger_words.song) >= 0;
+}
+
+// Write the received message to the database
 function storeInput(message, data, res) {
     let name = data['name'];
     let id = data['sender_id'];
@@ -59,7 +73,7 @@ function storeInput(message, data, res) {
             if (result.insertedCount === 1) {
                 outgoing = JSON.stringify({
                     bot_id: config.thugbot.bot_id,
-                    text: '@' + name + ' ' + 'got it',
+                    text: '@' + name + ' ' + 'got you luv',
                     attachments: [
                         {
                             type: 'mentions',
@@ -106,6 +120,7 @@ function storeInput(message, data, res) {
 
 }
 
+// Send a quote as a message
 function postTextResponse(id, name, res) {
 
     readQuote().then(quotes => {
@@ -129,6 +144,7 @@ function postTextResponse(id, name, res) {
 
 }
 
+// Send a picture as a message
 function postPictureResponse(id, name, res) {
 
     readImage().then(images => {
@@ -155,6 +171,32 @@ function postPictureResponse(id, name, res) {
     });
 }
 
+// Send a spotify link as a message
+function postSongResponse(){
+
+    getRandomSong().then(track => {
+
+        let outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + "bump it luv" + track['spotify'],
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
+            ]
+        });
+
+        sendResponse(outgoing, res);
+
+
+    })
+}
+
+// Fetch a photo from the DB
 async function readImage() {
     let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
     let path = config.database.host + ':' + config.database.port;
@@ -173,6 +215,7 @@ async function readImage() {
     client.close();
 }
 
+// Read a quote from the DB
 async function readQuote() {
     let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
     let path = config.database.host + ':' + config.database.port;
@@ -191,6 +234,7 @@ async function readQuote() {
     client.close();
 }
 
+// Write an image URL to the DB
 async function insertImage(source) {
     let cred = config.database.credentials.user + ':' + config.database.credentials.pwd;
     let path = config.database.host + ':' + config.database.port;
@@ -209,6 +253,16 @@ async function insertImage(source) {
     client.close();
 }
 
+// Use spotify helper functions to get a random track
+async function getRandomSong() {
+
+    let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
+    let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
+    return await spot.getRandomTrackFromAlbum(albumId, accessToken);
+
+}
+
+// Post the response with proper format and info
 function sendResponse(outgoing, res) {
 
     let options = {
