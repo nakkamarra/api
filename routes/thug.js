@@ -192,6 +192,24 @@ function postSongResponse(id, name, res){
 
         sendResponse(outgoing, res);
 
+    }).catch(error => {
+
+        let outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + error,
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
+            ]
+        });
+
+        sendResponse(outgoing, res)
+
     })
 }
 
