@@ -16,8 +16,8 @@ function getAccessToken(clientId, clientSecret) {
         }
     };
 
-    https.request(postData, function (response) {
-        return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+        https.request(postData, function (response) {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 let body = [];
 
@@ -49,8 +49,8 @@ function getRandomAlbum(artistId, accessToken) {
         }
     };
 
-    https.get(data, function (response) {
-        return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+        https.get(data, function (response) {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 let body = [];
 
@@ -84,8 +84,8 @@ function getRandomTrackFromAlbum(albumId, accessToken) {
         }
     };
 
-    https.get(data, function (response) {
-        return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
+        https.get(data, function (response) {
             if (response.statusCode >= 200 && response.statusCode < 300) {
                 let body = [];
 
@@ -103,7 +103,7 @@ function getRandomTrackFromAlbum(albumId, accessToken) {
             } else {
                 reject(new Error('failed to get random song'))
             }
-        });
+        })
     });
 }
 

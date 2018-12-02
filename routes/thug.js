@@ -174,23 +174,24 @@ function postPictureResponse(id, name, res) {
 // Send a spotify link as a message
 function postSongResponse(id, name, res){
 
-    let track = getRandomSong();
-
-    let outgoing = JSON.stringify({
-        bot_id: config.thugbot.bot_id,
-        text: '@' + name + "bump it luv" + track['spotify'],
-        attachments: [
-            {
-                type: 'mentions',
-                user_ids: [id],
-                loci: [
-                    [0, 1 + name.length]
-                ]
-            }
+    getRandomSong().then(track => {
+        let outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + "bump it luv" + track['spotify'],
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
             ]
         });
 
-    sendResponse(outgoing, res);
+        sendResponse(outgoing, res);
+    });
+
 }
 
 // Fetch a photo from the DB
@@ -257,8 +258,8 @@ async function getRandomSong() {
         let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
         let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
         return await spot.getRandomTrackFromAlbum(albumId, accessToken)
-    } catch (error) {
-        return error.toString()
+    }  catch (err) {
+        console.log(err.stack);
     }
 
 }
