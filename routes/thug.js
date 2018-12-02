@@ -3,7 +3,7 @@ const router = express.Router();
 const config = require('../config');
 const https = require('https');
 const mongo = require('mongodb').MongoClient;
-const spot = require('/spotify');
+const spot = require('./spotify');
 
 /* GET request */
 router.get('/', function (req, res) {
