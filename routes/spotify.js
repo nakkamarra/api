@@ -6,9 +6,9 @@ async function getAccessToken(clientId, clientSecret) {
     let auth = 'Basic ' + payload;
 
     let postData = {
-        host: 'accounts.spotify.com/api/token',
+        host: 'accounts.spotify.com',
         port: 443,
-        path: '/',
+        path: '/api/token',
         method: 'POST',
         headers : {
             'Authorization': auth,
@@ -40,9 +40,9 @@ async function getAccessToken(clientId, clientSecret) {
 async function getRandomAlbum(artistId, accessToken) {
 
     let data = {
-        host: 'api.spotify.com/v1/artists/' + artistId + '/albums',
+        host: 'api.spotify.com',
         port: 443,
-        path: '/',
+        path: '/v1/artists/' + artistId + '/albums',
         method: 'GET',
         headers : {
             'Authorization': 'Bearer ' + accessToken,
@@ -75,9 +75,9 @@ async function getRandomAlbum(artistId, accessToken) {
 // Get all tracks from the Album passed and randomly select one and return it
 async function getRandomTrackFromAlbum(albumId, accessToken) {
     let data = {
-        host: 'api.spotify.com/v1/albums/' + albumId + '/tracks',
+        host: 'api.spotify.com',
         port: 443,
-        path: '/',
+        path: '/v1/albums/' + albumId + '/tracks',
         method: 'GET',
         headers : {
             'Authorization': 'Bearer ' + accessToken,
