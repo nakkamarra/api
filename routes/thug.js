@@ -192,24 +192,6 @@ function postSongResponse(id, name, res){
 
         sendResponse(outgoing, res);
 
-
-    }).catch( function (onRejected) {
-
-        let outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
-            text: '@' + name + onRejected,
-            attachments: [
-                {
-                    type: 'mentions',
-                    user_ids: [id],
-                    loci: [
-                        [0, 1 + name.length]
-                    ]
-                }
-            ]
-        });
-
-        sendResponse(outgoing, res);
     })
 }
 
@@ -273,9 +255,13 @@ async function insertImage(source) {
 // Use spotify helper functions to get a random track
 async function getRandomSong() {
 
-    let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
-    let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
-    return await spot.getRandomTrackFromAlbum(albumId, accessToken);
+    try {
+        let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
+        let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
+        return await spot.getRandomTrackFromAlbum(albumId, accessToken);
+    } catch {
+        return 'Failed to get a song'
+    }
 
 }
 
