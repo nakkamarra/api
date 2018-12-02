@@ -66,7 +66,7 @@ async function getRandomAlbum(artistId, accessToken) {
                     resolve(randomAlbum['id'])
                 });
             } else {
-                reject(new Erro('failed to get random album'))
+                reject(new Error('failed to get random album'))
             }
         });
     });
