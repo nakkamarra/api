@@ -38,4 +38,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
+process.on('unhandledRejection', function(reason, promise) {
+  console.log(reason);
+});
+
 module.exports = app;

@@ -190,8 +190,6 @@ function postSongResponse(id, name, res){
         });
 
         sendResponse(outgoing, res);
-    }).catch( (rejection) => {
-        console.log(rejection)
     })
 
 }
