@@ -256,7 +256,7 @@ async function getRandomSong() {
     try {
         let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
         let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
-        return await spot.getRandomTrackFromAlbum(albumId, accessToken);
+        return await spot.getRandomTrackFromAlbum(albumId, accessToken)
     } catch (error) {
         return error.toString()
     }

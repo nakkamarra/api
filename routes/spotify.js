@@ -31,7 +31,7 @@ async function getAccessToken(clientId, clientSecret) {
                     resolve(json['access_token'])
                 });
             } else {
-                reject('no token')
+                reject(new Error('no token'))
             }
         });
     });
@@ -66,7 +66,7 @@ async function getRandomAlbum(artistId, accessToken) {
                     resolve(randomAlbum['id'])
                 });
             } else {
-                reject('failed to get random album')
+                reject(new Erro('failed to get random album'))
             }
         });
     });
@@ -101,7 +101,7 @@ async function getRandomTrackFromAlbum(albumId, accessToken) {
                     resolve(randomTrack['external_urls'])
                 });
             } else {
-                reject('failed to get random song')
+                reject(new Error('failed to get random song'))
             }
         });
     });
