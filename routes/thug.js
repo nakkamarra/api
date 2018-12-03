@@ -8,7 +8,7 @@ const _ = require('underscore');
 
 /* GET request */
 router.get('/', function (req, res) {
-    res.sendStatus(405);
+    res.sendStatus(400);
 });
 
 /* POST request */
