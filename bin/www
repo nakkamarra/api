@@ -8,6 +8,7 @@ const app = require('../app');
 const debug = require('debug')('api:server');
 const https = require('https');
 const config = require('../config');
+const fs = require('fs');
 
 /**
  * Get port from environment and store in Express.
