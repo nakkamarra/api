@@ -23,10 +23,14 @@ router.post('/', function (req, res) {
 });
 
 function parseRequest(data, res) {
-    let senderID = data['sender_id'] || '';
-    let senderName = data['name'] || '';
-    let messageText = data['text'].toLowerCase() || '';
-
+    try {
+        let senderID = data['sender_id'];
+        let senderName = data['name'];
+        let messageText = data['text'].toLowerCase();
+    } catch (err) {
+        res.sendStatus(400);
+    }
+        
     if (containsTrigger(messageText)) {
 
         if (containsStorageRequest(messageText)) {
