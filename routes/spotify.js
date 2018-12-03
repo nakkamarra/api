@@ -8,7 +8,7 @@ module.exports = {
         let auth = 'Basic ' + payload;
         let postBody = {grant_type: "client_credentials"};
 
-        return axios.post('https:accounts.spotify.com/api/token', postBody, {
+        return axios.post('https//:accounts.spotify.com/api/token', postBody, {
             headers: {
                 'Authorization': auth,
                 'Content-Type': 'x-www-form-urlencoded'
@@ -19,7 +19,7 @@ module.exports = {
 
 // Get all albums from the Artist passed and randomly select one and return it
     getRandomAlbum: async function (artistId, accessToken) {
-        return axios.get('https:api.spotify.com/v1/artists/' + artistId + '/albums', {
+        return axios.get('https//:api.spotify.com/v1/artists/' + artistId + '/albums', {
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
             }
@@ -29,7 +29,7 @@ module.exports = {
 // Get all tracks from the Album passed and randomly select one and return it
     getRandomTrackFromAlbum: async function (albumId, accessToken) {
 
-        return axios.get('https:api.spotify.com/v1/albums/' + albumId + '/tracks', {
+        return axios.get('https//:api.spotify.com/v1/albums/' + albumId + '/tracks', {
             headers: {
                 'Authorization': 'Bearer ' + accessToken,
             }
