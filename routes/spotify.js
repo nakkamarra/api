@@ -6,12 +6,12 @@ module.exports = {
     getAccessToken: async function (clientId, clientSecret) {
         let payload = Buffer(clientId + ':' + clientSecret).toString('base64');
         let auth = 'Basic ' + payload;
-        let postBody = {grant_type: "client_credentials"};
+        let postBody = { grant_type: "client_credentials" };
 
         return axios.post('https//:accounts.spotify.com/api/token', postBody, {
             headers: {
                 'Authorization': auth,
-                'Content-Type': 'x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded'
             }
         });
 
