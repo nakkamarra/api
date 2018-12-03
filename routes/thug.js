@@ -258,6 +258,7 @@ async function insertImage(source) {
 async function getRandomSong() {
     try {
         let tokenCall = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
+        console.log(tokenCall.response);
         let accessToken = tokenCall.response.data['accessToken'];
         let albumCall = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
         let albums = albumCall.response.data['items'];
