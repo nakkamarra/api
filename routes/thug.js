@@ -4,6 +4,7 @@ const config = require('../config');
 const https = require('https');
 const mongo = require('mongodb').MongoClient;
 const spot = require('./spotify');
+const _ = require('underscore');
 
 /* GET request */
 router.get('/', function (req, res) {
@@ -254,9 +255,16 @@ async function insertImage(source) {
 // Use spotify helper functions to get a random track
 async function getRandomSong() {
     try {
-        let accessToken = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
-        let albumId = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
-        return await spot.getRandomTrackFromAlbum(albumId, accessToken)
+        let tokenCall = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
+        let accessToken = tokenCall.response.body['accessToken'];
+        let albumCall = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
+        let albums = albumCall.response.body['items'];
+        let randomAlbum = _.sample(albums);
+        let albumId = randomAlbum.id;
+        let trackCall = await spot.getRandomTrackFromAlbum(albumId, accessToken)
+        let tracks = trackCall.response.body['items'];
+        let randomTrack = _.sample(tracks);
+        return randomTrack['external_urls']
     }  catch (err) {
         console.log(err.stack);
     }
