@@ -114,7 +114,7 @@ function getRandomTrackFromAlbum(albumId, accessToken) {
 
     return new Promise((resolve, reject) => {
 
-        var req = https.request(postData, function(response) {
+        var req = https.request(data, function(response) {
 
             if (response.statusCode < 200 || response.statusCode >= 300) {
                 return reject(new Error('statusCode=' + response.statusCode));
