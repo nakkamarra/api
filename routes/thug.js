@@ -258,13 +258,13 @@ async function insertImage(source) {
 async function getRandomSong() {
     try {
         let tokenCall = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
-        let accessToken = tokenCall.response.body['accessToken'];
+        let accessToken = tokenCall.response.data['accessToken'];
         let albumCall = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
-        let albums = albumCall.response.body['items'];
+        let albums = albumCall.response.data['items'];
         let randomAlbum = _.sample(albums);
         let albumId = randomAlbum.id;
         let trackCall = await spot.getRandomTrackFromAlbum(albumId, accessToken)
-        let tracks = trackCall.response.body['items'];
+        let tracks = trackCall.response.data['items'];
         let randomTrack = _.sample(tracks);
         return randomTrack['external_urls']
     }  catch (err) {
