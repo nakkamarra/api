@@ -1,4 +1,5 @@
 const https = require('https');
+const _ = require('underscore');
 
 // Get an API token using the provided ID and Secret
 function getAccessToken(clientId, clientSecret) {
@@ -17,25 +18,41 @@ function getAccessToken(clientId, clientSecret) {
     };
 
     return new Promise((resolve, reject) => {
-        https.request(postData, function (response) {
-            if (response.statusCode >= 200 && response.statusCode < 300) {
-                let body = [];
 
-                response.on('data', (chunk => {
-                    body.push(chunk)
-                }));
+        var req = https.request(postData, function(response) {
 
-                response.on('end', () => {
-                    let responseBody = body.join('');
-                    let json = JSON.parse(responseBody);
-                    resolve(json['access_token'])
-                });
-            } else {
-                reject(new Error('no token'))
+            if (response.statusCode < 200 || response.statusCode >= 300) {
+                return reject(new Error('statusCode=' + response.statusCode));
             }
+
+            var body = [];
+            response.on('data', function(chunk) {
+                body.push(chunk);
+            });
+
+            response.on('end', function() {
+                try {
+                    body = JSON.parse(Buffer.concat(body).toString());
+                } catch(e) {
+                    reject(e);
+                }
+                resolve(body['access_token']);
+            });
         });
+
+        req.on('error', function(err) {
+
+            reject(err);
+        });
+
+        if (postData) {
+            req.write({grant_type : "client_credentials"});
+        }
+
+        req.end();
     });
 }
+
 // Get all albums from the Artist passed and randomly select one and return it
 function getRandomAlbum(artistId, accessToken) {
 
@@ -50,25 +67,36 @@ function getRandomAlbum(artistId, accessToken) {
     };
 
     return new Promise((resolve, reject) => {
-        https.get(data, function (response) {
-            if (response.statusCode >= 200 && response.statusCode < 300) {
-                let body = [];
 
-                response.on('data', (chunk => {
-                    body.push(chunk)
-                }));
+        var req = https.request(postData, function(response) {
 
-                response.on('end', () => {
-                    let responseBody = body.join('');
-                    let json = JSON.parse(responseBody);
-                    let albums = json['items'];
-                    let randomAlbum = _.sample(albums);
-                    resolve(randomAlbum['id'])
-                });
-            } else {
-                reject(new Error('failed to get random album'))
+            if (response.statusCode < 200 || response.statusCode >= 300) {
+                return reject(new Error('statusCode=' + response.statusCode));
             }
+
+            var body = [];
+            response.on('data', function(chunk) {
+                body.push(chunk);
+            });
+
+            response.on('end', function() {
+                try {
+                    body = JSON.parse(Buffer.concat(body).toString());
+                } catch(e) {
+                    reject(e);
+                }
+                let albums = body['items'];
+                let randomAlbum = _.sample(albums);
+                resolve(randomAlbum['id']);
+            });
         });
+
+        req.on('error', function(err) {
+
+            reject(err);
+        });
+
+        req.end();
     });
 }
 
@@ -85,25 +113,36 @@ function getRandomTrackFromAlbum(albumId, accessToken) {
     };
 
     return new Promise((resolve, reject) => {
-        https.get(data, function (response) {
-            if (response.statusCode >= 200 && response.statusCode < 300) {
-                let body = [];
 
-                response.on('data', (chunk => {
-                    body.push(chunk)
-                }));
+        var req = https.request(postData, function(response) {
 
-                response.on('end', () => {
-                    let responseBody = body.join('');
-                    let json = JSON.parse(responseBody);
-                    let tracks = json['items'];
-                    let randomTrack = _.sample(tracks);
-                    resolve(randomTrack['external_urls'])
-                });
-            } else {
-                reject(new Error('failed to get random song'))
+            if (response.statusCode < 200 || response.statusCode >= 300) {
+                return reject(new Error('statusCode=' + response.statusCode));
             }
-        })
+
+            var body = [];
+            response.on('data', function(chunk) {
+                body.push(chunk);
+            });
+
+            response.on('end', function() {
+                try {
+                    body = JSON.parse(Buffer.concat(body).toString());
+                } catch(e) {
+                    reject(e);
+                }
+                let tracks = body['items'];
+                let randomTrack = _.sample(tracks);
+                resolve(randomTrack['external_urls'])
+            });
+        });
+
+        req.on('error', function(err) {
+
+            reject(err);
+        });
+
+        req.end();
     });
 }
 
