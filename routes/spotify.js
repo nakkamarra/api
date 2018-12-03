@@ -1,5 +1,4 @@
-const https = require('https');
-const _ = require('underscore');
+const axios = require('axios');
 
 // Get an API token using the provided ID and Secret
 function getAccessToken(clientId, clientSecret) {
