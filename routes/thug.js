@@ -14,11 +14,11 @@ router.get('/', function (req, res) {
 /* POST request */
 router.post('/', function (req, res) {
     console.log(req.body);
-    if (req.body) {
+    if (Object.keys(req.body).length === 0) {
+        res.sendStatus(400);
+    } else {
         let data = req.body;
         parseRequest(data, res);
-    } else {
-        res.sendStatus(400);
     }
 });
 
