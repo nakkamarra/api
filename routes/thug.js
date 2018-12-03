@@ -14,8 +14,12 @@ router.get('/', function (req, res) {
 /* POST request */
 router.post('/', function (req, res) {
     console.log(req.body);
-    let data = req.body;
-    parseRequest(data, res);
+    if (req.body) {
+        let data = req.body;
+        parseRequest(data, res);
+    } else {
+        res.sendStatus(400);
+    }
 });
 
 function parseRequest(data, res) {
