@@ -1,4 +1,5 @@
 const axios = require('axios');
+const qs = require('qs');
 
 module.exports = {
 
@@ -6,7 +7,7 @@ module.exports = {
     getAccessToken: async function (clientId, clientSecret) {
         let payload = Buffer(clientId + ':' + clientSecret).toString('base64');
         let auth = 'Basic ' + payload;
-        let postBody = { grant_type: "client_credentials" };
+        let postBody = qs.stringify({ grant_type: "client_credentials" });
 
         return axios.post('https//:accounts.spotify.com/api/token', postBody, {
             headers: {
