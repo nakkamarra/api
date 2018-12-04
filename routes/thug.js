@@ -262,22 +262,20 @@ async function insertImage(source) {
 }
 
 // Use spotify helper functions to get a random track
-async function getRandomSong() {
-    try {
-        let tokenCall = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
-        console.log(tokenCall.response);
+function getRandomSong() {
+    spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret).then(tokenCall => {
         let accessToken = tokenCall.response.data['access_token'];
-        let albumCall = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
-        let albums = albumCall.response.data['items'];
-        let randomAlbum = _.sample(albums);
-        let albumId = randomAlbum.id;
-        let trackCall = await spot.getRandomTrackFromAlbum(albumId, accessToken)
-        let tracks = trackCall.response.data['items'];
-        let randomTrack = _.sample(tracks);
-        return randomTrack['external_urls']
-    }  catch (err) {
-        console.log(err.stack);
-    }
+        spot.getRandomAlbum(config.spotify.artistId, accessToken).then(albumCall => {
+            let albums = albumCall.response.data['items'];
+            let randomAlbum = _.sample(albums);
+            let albumId = randomAlbum.id;
+            spot.getRandomTrackFromAlbum(albumId, accessToken).then(trackCall => {
+                let tracks = trackCall.response.data['items'];
+                let randomTrack = _.sample(tracks);
+                return randomTrack['external_urls']
+            })
+        });
+    });
 }
 
 // Post the response with proper format and info
