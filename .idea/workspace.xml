@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="49f261b6-b267-4ae0-98be-b1b85b32909e" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/routes/spotify.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/spotify.js" afterDir="false" />
-    </list>
+    <list default="true" id="49f261b6-b267-4ae0-98be-b1b85b32909e" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
     <ignored path="$PROJECT_DIR$/tmp/" />
@@ -52,20 +50,20 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="spotify.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="spotify.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/routes/spotify.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="436">
+            <state relative-caret-position="443">
               <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="thug.js" pinned="false" current-in-tab="false">
+      <file leaf-file-name="thug.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/thug.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="268" column="66" lean-forward="true" selection-start-line="268" selection-start-column="66" selection-end-line="268" selection-end-column="66" />
+            <state relative-caret-position="229">
+              <caret line="277" column="7" selection-start-line="277" selection-start-column="7" selection-end-line="277" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -99,8 +97,8 @@
         <option value="$PROJECT_DIR$/bin/www" />
         <option value="$PROJECT_DIR$/config.js" />
         <option value="$PROJECT_DIR$/package.json" />
-        <option value="$PROJECT_DIR$/routes/thug.js" />
         <option value="$PROJECT_DIR$/routes/spotify.js" />
+        <option value="$PROJECT_DIR$/routes/thug.js" />
       </list>
     </option>
   </component>
@@ -202,16 +200,15 @@
       <workItem from="1530911736788" duration="6007000" />
       <workItem from="1530974745469" duration="10139000" />
       <workItem from="1531233908914" duration="757000" />
-      <workItem from="1543699068074" duration="21925000" />
+      <workItem from="1543699068074" duration="22239000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67051000" />
+    <option name="totallyTimeSpent" value="67365000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1280" height="800" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.2494043" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -566,13 +563,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/routes/thug.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="268" column="66" lean-forward="true" selection-start-line="268" selection-start-column="66" selection-end-line="268" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -589,8 +579,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/spotify.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
+        <state relative-caret-position="443">
           <caret line="30" column="21" selection-start-line="30" selection-start-column="21" selection-end-line="30" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/thug.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="277" column="7" selection-start-line="277" selection-start-column="7" selection-end-line="277" selection-end-column="7" />
         </state>
       </provider>
     </entry>
