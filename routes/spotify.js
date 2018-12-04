@@ -8,12 +8,18 @@ module.exports = {
         let payload = Buffer(clientId + ':' + clientSecret).toString('base64');
         let auth = 'Basic ' + payload;
 
-        return axios.post('https://accounts.spotify.com/api/token',
+        console.log(auth);
+
+        let req = axios.post('https://accounts.spotify.com/api/token',
             qs.stringify({ grant_type: "client_credentials" }), { headers: {
-                'Authorization': auth,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
+                    'Authorization': auth,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
+
+        console.log(req);
+
+        return req;
 
     },
 
