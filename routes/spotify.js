@@ -8,16 +8,20 @@ module.exports = {
         let payload = Buffer(clientId + ':' + clientSecret).toString('base64');
         let auth = 'Basic ' + payload;
 
-        let tokenCall = await axios.post('https://accounts.spotify.com/api/token',
-            qs.stringify({ grant_type: "client_credentials" }), { headers: {
-                    'Authorization': auth,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            });
+        try {
+            let tokenCall = await axios.post('https://accounts.spotify.com/api/token',
+                qs.stringify({ grant_type: "client_credentials" }), { headers: {
+                        'Authorization': auth,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                });
 
-        console.log(tokenCall.response);
+            console.log(tokenCall.response);
 
-        return tokenCall.response.data['access_token'];
+            return tokenCall.response.data['access_token'];
+        } catch (err) {
+            return ''
+        }
     },
 
 // Get all albums from the Artist passed and randomly select one and return it
