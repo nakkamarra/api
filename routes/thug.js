@@ -187,7 +187,7 @@ function postSongResponse(id, name, res){
 
         let outgoing = JSON.stringify({
             bot_id: config.thugbot.bot_id,
-            text: '@' + name + " bump it luv " + track.spotify,
+            text: track.spotify,
             attachments: [
                 {
                     type: 'mentions',
