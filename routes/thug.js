@@ -182,22 +182,25 @@ function postPictureResponse(id, name, res) {
 // Send a spotify link as a message
 function postSongResponse(id, name, res){
 
-    let track = getRandomSong();
-    let outgoing = JSON.stringify({
-        bot_id: config.thugbot.bot_id,
-        text: '@' + name + "bump it luv" + track.spotify,
-        attachments: [
-            {
-                type: 'mentions',
-                user_ids: [id],
-                loci: [
-                    [0, 1 + name.length]
-                ]
-            }
+    getRandomSong().then(track => {
+        console.log(track);
+
+        let outgoing = JSON.stringify({
+            bot_id: config.thugbot.bot_id,
+            text: '@' + name + "bump it luv" + track.spotify,
+            attachments: [
+                {
+                    type: 'mentions',
+                    user_ids: [id],
+                    loci: [
+                        [0, 1 + name.length]
+                    ]
+                }
             ]
         });
 
-    sendResponse(outgoing, res);
+        sendResponse(outgoing, res);
+    })
 
 }
 
@@ -259,16 +262,22 @@ async function insertImage(source) {
 }
 
 // Use spotify helper functions to get a random track
-function getRandomSong() {
-        let accessToken = spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
-        let albumCall = spot.getRandomAlbum(config.spotify.artistId, accessToken);
+async function getRandomSong() {
+    try {
+        let tokenCall = await spot.getAccessToken(config.spotify.clientId, config.spotify.clientSecret);
+        console.log(tokenCall.response);
+        let accessToken = tokenCall.response.data['access_token'];
+        let albumCall = await spot.getRandomAlbum(config.spotify.artistId, accessToken);
         let albums = albumCall.response.data['items'];
         let randomAlbum = _.sample(albums);
         let albumId = randomAlbum.id;
-        let trackCall = spot.getRandomTrackFromAlbum(albumId, accessToken)
+        let trackCall = await spot.getRandomTrackFromAlbum(albumId, accessToken);
         let tracks = trackCall.response.data['items'];
         let randomTrack = _.sample(tracks);
         return randomTrack['external_urls']
+    }  catch (err) {
+        console.log(err.stack);
+    }
 }
 
 // Post the response with proper format and info
