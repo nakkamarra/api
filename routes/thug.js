@@ -27,28 +27,27 @@ function parseRequest(data, res) {
         let senderID = data['sender_id'];
         let senderName = data['name'];
         let messageText = data['text'].toLowerCase();
+        if (containsTrigger(messageText)) {
+
+            if (containsStorageRequest(messageText)) {
+                storeInput(messageText, data, res);
+            } else {
+                if (containsPictureRequest(messageText)) {
+                    postPictureResponse(senderID, senderName, res);
+                } else if (containsSongRequest(messageText)) {
+                    postSongResponse(senderID, senderName, res);
+                }
+                else {
+                    postTextResponse(senderID, senderName, res);
+                }
+            }
+
+        } else {
+            res.sendStatus(200);
+            res.end();
+        }
     } catch (err) {
         res.sendStatus(400);
-    }
-        
-    if (containsTrigger(messageText)) {
-
-        if (containsStorageRequest(messageText)) {
-            storeInput(messageText, data, res);
-        } else {
-            if (containsPictureRequest(messageText)) {
-                postPictureResponse(senderID, senderName, res);
-            } else if (containsSongRequest(messageText)) {
-                postSongResponse(senderID, senderName, res);
-            }
-            else {
-                postTextResponse(senderID, senderName, res);
-            }
-        }
-
-    } else {
-        res.sendStatus(200);
-        res.end();
     }
 }
 
