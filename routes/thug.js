@@ -5,6 +5,7 @@ const https = require('https');
 const mongo = require('mongodb').MongoClient;
 const spot = require('./spotify');
 const _ = require('underscore');
+const axious = require('axios');
 
 /* GET request */
 router.get('/', function (req, res) {
@@ -283,31 +284,9 @@ async function getRandomSong() {
 // Post the response with proper format and info
 function sendResponse(outgoing, res) {
 
-    let options = {
-        host: config.thugbot.host,
-        path: config.thugbot.path,
-        port: config.thugbot.port,
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Content-Length': Buffer.byteLength(outgoing)
-        }
-    };
+    let url = config.thugbot.host + ':' + config.thugbot.port + '/' + config.thugbot.path;
+    axios.post(url, outgoing);
 
-    let callback = function (returning) {
-        let incoming = '';
-        returning.on('data', function (chunk) {
-            incoming += chunk;
-        });
-        returning.on('end', function () {
-            console.log(incoming);
-        });
-        res.sendStatus(201);
-    };
-
-    let req = https.request(options, callback);
-    req.write(outgoing);
-    req.end();
 }
 
 module.exports = router;
