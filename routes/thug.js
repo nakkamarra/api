@@ -282,10 +282,11 @@ async function getRandomSong() {
 }
 
 // Post the response with proper format and info
-function sendResponse(outgoing, res) {
+async function sendResponse(outgoing, res) {
 
-    let url = config.thugbot.host + ':' + config.thugbot.port + '/' + config.thugbot.path;
-    axios.post(url, outgoing);
+    let url = 'https://' + config.thugbot.host + ':' + config.thugbot.path;
+    let response = await axios.post(url, outgoing);
+    console.log(response.data);
 
 }
 
