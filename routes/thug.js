@@ -7,6 +7,8 @@ const spot = require('./spotify');
 const _ = require('underscore');
 const axios = require('axios');
 
+var groupId;
+
 /* GET request */
 router.get('/', function (req, res) {
     res.sendStatus(405);
@@ -28,6 +30,7 @@ function parseRequest(data, res) {
         let senderID = data['sender_id'];
         let senderName = data['name'];
         let messageText = data['text'].toLowerCase();
+        groupId = data['group_id'];
         if (containsTrigger(messageText)) {
 
             if (containsStorageRequest(messageText)) {
@@ -81,7 +84,7 @@ function storeInput(message, data, res) {
         insertImage(url).then(result => {
             if (result.insertedCount === 1) {
                 outgoing = JSON.stringify({
-                    bot_id: config.thugbot.bot_id,
+                    bot_id: config.thugbot.identifiers[groupId],
                     text: '@' + name + ' ' + 'got you luv',
                     attachments: [
                         {
@@ -95,7 +98,7 @@ function storeInput(message, data, res) {
                 });
             } else {
                 outgoing = JSON.stringify({
-                    bot_id: config.thugbot.bot_id,
+                    bot_id: config.thugbot.identifiers[groupId],
                     text: '@' + name + ' ' + 'something went wrong',
                     attachments: [
                         {
@@ -112,7 +115,7 @@ function storeInput(message, data, res) {
         });
     } else {
         outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
+            bot_id: config.thugbot.identifiers[groupId],
             text: '@' + name + ' ' + 'I can only store flicks rn',
             attachments: [
                 {
@@ -135,7 +138,7 @@ function postTextResponse(id, name, res) {
     readQuote().then(quotes => {
 
         let outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
+            bot_id: config.thugbot.identifiers[groupId],
             text: '@' + name + ' ' + quotes[0].text,
             attachments: [
                 {
@@ -159,7 +162,7 @@ function postPictureResponse(id, name, res) {
     readImage().then(images => {
 
         let outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
+            bot_id: config.thugbot.identifiers[groupId],
             text: '@' + name,
             attachments: [
                 {
@@ -187,7 +190,7 @@ function postSongResponse(id, name, res){
         console.log(track);
 
         let outgoing = JSON.stringify({
-            bot_id: config.thugbot.bot_id,
+            bot_id: config.thugbot.identifiers[groupId],
             text: track.spotify,
             attachments: [
                 {
