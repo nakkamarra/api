@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const config = require('../config');
-const https = require('https');
 const mongo = require('mongodb').MongoClient;
 const spot = require('./spotify');
 const _ = require('underscore');
@@ -290,7 +289,7 @@ async function sendResponse(outgoing, res) {
     let url = 'https://' + config.thugbot.host + '/' + config.thugbot.path;
     let response = await axios.post(url, outgoing);
     console.log(response);
-    res.sendStatus(response.statusCode);
+    res.sendStatus(response.status);
     res.end();
 }
 
